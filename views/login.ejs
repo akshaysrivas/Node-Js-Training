@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Login Form</h2>
+  <form id="login">
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="username" placeholder="Enter email" name="username">
+    </div>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</div>
+<script>
+  const form = document.getElementById('login')
+  form.addEventListener('submit', login)
+
+  async function login(event) {
+    event.preventDefault()
+    const username = document.getElementById('username').value
+    const password = document.getElementById('password').value
+
+    const result = await fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username,
+        password
+      })
+    }).then((res) => res.json())
+
+    if (result.status === 'ok') {
+      // everythign went fine
+      console.log('Got the token: ', result.data)
+      localStorage.setItem('token', result.data)
+      alert('Success')
+      window.location.href="/profile";
+    } else {
+      alert(result.error)
+    }
+  }
+</script>
+</body>
+</html>
